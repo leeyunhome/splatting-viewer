@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spark.js - 3D Gaussian Splatting Test</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 100;
+      max-width: 400px;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 5px;
+      z-index: 100;
+    }
+    #fileInput {
+      margin-top: 10px;
+      padding: 5px;
+      background: white;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    button {
+      padding: 8px 15px;
+      margin-top: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h3>Spark.js - 3D Gaussian Splatting Demo</h3>
+    <p>Select a PLY file or load the default butterfly model</p>
+    <small style="display: block; margin-top: 10px;">
+      <strong>Controls:</strong><br>
+      • Left Drag: Rotate<br>
+      • Right Drag: Pan (move)<br>
+      • Mouse Wheel: Zoom in/out<br>
+      • Middle Drag: Zoom<br>
+      • Arrow Keys: Pan
+    </small>
+  </div>
+
+  <div id="controls">
+    <h4 style="margin-top: 0;">Load Your PLY File</h4>
+    <input type="file" id="fileInput" accept=".ply,.splat,.spz,.ksplat" />
+    <br>
+    <button id="loadDefault">Load Default Butterfly</button>
+    <br>
+    <label style="display: block; margin-top: 10px;">
+      <input type="checkbox" id="autoRotate" checked> Auto Rotate
+    </label>
+    <label style="display: block; margin-top: 5px;">
+      <input type="checkbox" id="invertY"> Invert Y (Flip 180°)
+    </label>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.178.0/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/",
+        "@sparkjsdev/spark": "https://sparkjs.dev/releases/spark/0.1.10/spark.module.js"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { SplatMesh } from "@sparkjsdev/spark";
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 5);
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add OrbitControls for mouse/keyboard interaction
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Smooth camera movements
+    controls.dampingFactor = 0.05;
+    controls.screenSpacePanning = true; // Pan in screen space (more intuitive)
+    controls.minDistance = 0.5;
+    controls.maxDistance = 100;
+    controls.maxPolarAngle = Math.PI;
+    
+    // Mouse button configuration
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,    // Left click = rotate
+      MIDDLE: THREE.MOUSE.DOLLY,   // Middle click = zoom
+      RIGHT: THREE.MOUSE.PAN       // Right click = pan
+    };
+    
+    // Touch configuration for mobile
+    controls.touches = {
+      ONE: THREE.TOUCH.ROTATE,
+      TWO: THREE.TOUCH.DOLLY_PAN
+    };
+
+    // Add some lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // Variables for splat mesh
+    let currentSplat = null;
+    let autoRotate = true;
+
+    // Function to load splat from URL or file
+    async function loadSplat(source) {
+      // Remove previous splat if exists
+      if (currentSplat) {
+        scene.remove(currentSplat);
+        currentSplat = null;
+      }
+
+      document.querySelector('#info p').textContent = 'Loading splat model...';
+
+      try {
+        let splatMesh;
+        
+        if (typeof source === 'string') {
+          // Load from URL
+          splatMesh = new SplatMesh({ url: source });
+        } else {
+          // Load from File object
+          const arrayBuffer = await source.arrayBuffer();
+          const blob = new Blob([arrayBuffer]);
+          const url = URL.createObjectURL(blob);
+          splatMesh = new SplatMesh({ url: url });
+        }
+
+        splatMesh.position.set(0, 0, -3);
+        scene.add(splatMesh);
+        currentSplat = splatMesh;
+
+        // Update info when loaded
+        splatMesh.addEventListener('load', () => {
+          document.querySelector('#info p').textContent = `✓ Model loaded successfully! ${splatMesh.geometry?.getAttribute('position')?.count || 'Unknown'} splats`;
+        });
+
+        splatMesh.addEventListener('error', (e) => {
+          document.querySelector('#info p').textContent = '✗ Error loading model: ' + e.message;
+          console.error('Load error:', e);
+        });
+
+      } catch (error) {
+        document.querySelector('#info p').textContent = '✗ Error: ' + error.message;
+        console.error('Error loading splat:', error);
+      }
+    }
+
+    // File input handler
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        document.querySelector('#info p').textContent = `Loading ${file.name}...`;
+        loadSplat(file);
+      }
+    });
+
+    // Load default button
+    document.getElementById('loadDefault').addEventListener('click', () => {
+      const splatURL = "https://sparkjs.dev/assets/splats/butterfly.spz";
+      loadSplat(splatURL);
+    });
+
+    // Auto rotate checkbox
+    document.getElementById('autoRotate').addEventListener('change', (event) => {
+      autoRotate = event.target.checked;
+    });
+
+    // Invert Y checkbox
+    document.getElementById('invertY').addEventListener('change', (event) => {
+      if (currentSplat) {
+        if (event.target.checked) {
+          currentSplat.rotation.x = Math.PI; // 180 degrees
+        } else {
+          currentSplat.rotation.x = 0;
+        }
+      }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation loop
+    renderer.setAnimationLoop(function animate(time) {
+      controls.update(); // Update controls for damping
+      renderer.render(scene, camera);
+      if (currentSplat && autoRotate) {
+        currentSplat.rotation.y += 0.01;
+      }
+    });
+  </script>
+</body>
+</html>
