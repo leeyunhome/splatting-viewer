@@ -15,8 +15,15 @@ Browser-based 3D Gaussian Splatting viewer built on [Spark.js](https://sparkjs.d
 
 Open the live demo URL, then either:
 
-1. Click **"Load Default Butterfly"** to view the sample model, or
-2. Use the file picker to load your own splat file.
+1. Click **"Load Mechander (3DGS)"** to view the bundled 3DGS-trained Mechander figure (92 MB, ~30s to load)
+2. Click **"Load Default Butterfly"** to view the small Spark.js sample model
+3. Use the file picker to load your own splat file
+
+## Bundled models
+
+| Model | File | Notes |
+| --- | --- | --- |
+| Mechander | [`models/mechander.ply`](models/mechander.ply) | 3DGS-trained at 30k iterations with depth regularization |
 
 ## Controls
 

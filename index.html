@@ -73,10 +73,11 @@
   <div id="controls">
     <h4 style="margin-top: 0;">Load Your PLY File</h4>
     <input type="file" id="fileInput" accept=".ply,.splat,.spz,.ksplat" />
+    <h4 style="margin: 15px 0 5px;">Presets</h4>
+    <button id="loadMechander">Load Mechander (3DGS, 92MB)</button>
     <br>
     <button id="loadDefault">Load Default Butterfly</button>
-    <br>
-    <label style="display: block; margin-top: 10px;">
+    <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto Rotate
     </label>
     <label style="display: block; margin-top: 5px;">
@@ -198,6 +199,12 @@
     document.getElementById('loadDefault').addEventListener('click', () => {
       const splatURL = "https://sparkjs.dev/assets/splats/butterfly.spz";
       loadSplat(splatURL);
+    });
+
+    // Load Mechander preset (3DGS model trained on Mechander figure)
+    document.getElementById('loadMechander').addEventListener('click', () => {
+      document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
+      loadSplat('./models/mechander.ply');
     });
 
     // Auto rotate checkbox
