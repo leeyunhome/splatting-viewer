@@ -1,31 +1,34 @@
-# Splatting Viewer
+# 3D Gaussian Splatting — from camera math to a browser viewer
 
-Browser-based 3D Gaussian Splatting viewer built on [Spark.js](https://sparkjs.dev/) and Three.js.
+A ground-up study of 3D Gaussian Splatting: the classical vision underneath it, a differentiable renderer written from scratch, a real object reconstructed from photos I took myself, and a browser viewer to see the result.
 
-**Live demo:** https://leeyunhome.github.io/splatting-viewer/
+**Live:** https://leeyunhome.github.io/splatting-viewer/ · **Viewer:** https://leeyunhome.github.io/splatting-viewer/viewer/
 
-## Features
+한국어 안내는 라이브 페이지의 **KO/EN 토글**을 사용하세요 (페이지 자체가 한·영 병기).
 
-- Load `.ply` / `.splat` / `.spz` / `.ksplat` files from your local disk
-- Orbit / pan / zoom with mouse, keyboard, and touch
-- Auto-rotate and Y-axis invert toggles
-- Default Butterfly sample loaded from Spark.js CDN
+---
 
-## Usage
+## What's here
 
-Open the live demo URL, then either:
+This repo is both a **case-study landing page** and the **interactive viewer** behind it.
 
-1. Click **"Load Mechander (3DGS)"** to view the bundled 3DGS-trained Mechander figure (92 MB, ~30s to load)
-2. Click **"Load Default Butterfly"** to view the small Spark.js sample model
-3. Use the file picker to load your own splat file
+- **`index.html`** — the case study. Five stages, in the order they were actually done:
+  1. **Foundations** — camera model, lens distortion, features & matching, triangulation
+  2. **A renderer from scratch** — 2D Gaussian rasterization, differentiable rendering (hard vs. soft edge), adaptive density control, L1 + D-SSIM loss
+  3. **Photos → a model** — 26 photos I shot of the Mechander figure → COLMAP SfM → 3DGS training (30k, depth reg.) → live in the viewer
+  4. **In the browser** — reading the Spark.js render pipeline and shipping a viewer
+  5. **Roadmap** — Isaac Sim integration (in progress), outdoor/large scenes, `.spz` compression
+- **`viewer/index.html`** — a [Spark.js](https://sparkjs.dev/) + Three.js WebGL viewer. Loads bundled presets or your own `.ply` / `.splat` / `.spz` / `.ksplat` file, with orbit/pan/zoom.
 
-## Bundled models
+## Bundled model
 
-| Model | File | Notes |
-| --- | --- | --- |
-| Mechander | [`models/mechander.ply`](models/mechander.ply) | 3DGS-trained at 30k iterations with depth regularization |
+| Model | File | Splats | Notes |
+| --- | --- | --- | --- |
+| Mechander | [`models/mechander.ply`](models/mechander.ply) | 388,261 | reconstructed from 26 photos; trained 30k iterations with depth regularization (92 MB) |
 
-## Controls
+Each splat carries 62 attributes (position, covariance via scale + rotation quaternion, opacity, and spherical-harmonic color coefficients).
+
+## Viewer controls
 
 | Action | Input |
 | --- | --- |
@@ -35,13 +38,19 @@ Open the live demo URL, then either:
 
 ## Local development
 
-No build step needed — open `index.html` in a browser (or serve the folder with any static server).
+No build step. The landing page opens directly; the viewer needs an HTTP server (ES modules + importmap don't run over `file://`):
 
-```
+```bash
 python -m http.server 8000
-# then open http://localhost:8000/
+# landing → http://localhost:8000/
+# viewer  → http://localhost:8000/viewer/
 ```
 
-## Notes
+## Docs
 
-See [`spark-rendering-pipeline.md`](spark-rendering-pipeline.md) for an explanation of the rendering pipeline this viewer uses.
+- [`spark-rendering-pipeline.md`](spark-rendering-pipeline.md) — how Spark.js projects a 3D Gaussian to the screen (3D covariance → Jacobian → 2D projection → ellipse quad → Gaussian falloff → alpha blend), with source links.
+- [`HOSTING.md`](HOSTING.md) — GitHub Pages hosting layout, deploy steps, and the model file-size watch list.
+
+## Credits
+
+Built on [Spark.js](https://sparkjs.dev/), [Three.js](https://threejs.org/), [COLMAP](https://colmap.github.io/), and gsplat / Nerfstudio. Course materials remain the property of their respective owners.
