@@ -476,6 +476,40 @@
         <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">브라우저</span><span class="en">Browser</span></div><div class="d"><span class="ko">뷰어에서 실시간</span><span class="en">real-time in the viewer</span></div></div>
       </div>
     </div>
+
+    <h3 class="reveal" style="margin-top:48px;"><span class="ko">공개 데이터셋으로 검증: 토마토 온실</span><span class="en">Verified with a public dataset: tomato greenhouse</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">이 씬은 제가 촬영하지 않았습니다. 출처는 Pexels 공개 영상 <a href="https://www.pexels.com/video/tomato-farm-in-greenhouse-10179855/" target="_blank" rel="noopener">"Tomato farm in greenhouse"</a> (Mehdi Alaoui, <a href="https://www.pexels.com/license/" target="_blank" rel="noopener">Pexels License</a>) — 실외·다중 오브젝트 씬에서도 같은 파이프라인이 버티는지 확인하려고 골랐습니다. 영상에서 217프레임을 뽑아 COLMAP으로 190프레임 등록, 3DGS 30k iteration 학습, held-out PSNR 30.73dB(train 31.08 — 과적합 아님).</span>
+        <span class="en">I didn't shoot this one. Source: the Pexels video <a href="https://www.pexels.com/video/tomato-farm-in-greenhouse-10179855/" target="_blank" rel="noopener">"Tomato farm in greenhouse"</a> (Mehdi Alaoui, <a href="https://www.pexels.com/license/" target="_blank" rel="noopener">Pexels License</a>) — picked to check whether the same pipeline holds up on an outdoor, multi-object scene. 217 frames extracted, 190 registered by COLMAP, trained 30k iterations, held-out PSNR 30.73dB (train 31.08 — not overfit).</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">학습에 쓰인 프레임 (217장 중 8장)</span><span class="en">Frames used for training (8 of 217)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/tomato_input_01.jpg" alt="Tomato greenhouse frame 1" loading="lazy">
+      <img src="assets/tomato_input_02.jpg" alt="Tomato greenhouse frame 2" loading="lazy">
+      <img src="assets/tomato_input_03.jpg" alt="Tomato greenhouse frame 3" loading="lazy">
+      <img src="assets/tomato_input_04.jpg" alt="Tomato greenhouse frame 4" loading="lazy">
+      <img src="assets/tomato_input_05.jpg" alt="Tomato greenhouse frame 5" loading="lazy">
+      <img src="assets/tomato_input_06.jpg" alt="Tomato greenhouse frame 6" loading="lazy">
+      <img src="assets/tomato_input_07.jpg" alt="Tomato greenhouse frame 7" loading="lazy">
+      <img src="assets/tomato_input_08.jpg" alt="Tomato greenhouse frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">SOURCE</div><div class="t"><span class="ko">Pexels 영상</span><span class="en">Pexels video</span></div><div class="d"><span class="ko">공개 라이선스 · 217프레임 추출</span><span class="en">public license · 217 frames extracted</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">COLMAP</div><div class="t">SfM</div><div class="d"><span class="ko">190/217 등록 (sequential)</span><span class="en">190/217 registered (sequential)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · held-out PSNR 30.73</span><span class="en">30k · held-out PSNR 30.73</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">OUTPUT</div><div class="t"><span class="ko">splat (.ply)</span><span class="en">splats (.ply)</span></div><div class="d"><span class="ko">1.33M개 · 71MB</span><span class="en">1.33M · 71MB</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">브라우저</span><span class="en">Browser</span></div><div class="d"><span class="ko">뷰어에서 실시간</span><span class="en">real-time in the viewer</span></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
