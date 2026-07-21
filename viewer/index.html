@@ -100,6 +100,8 @@
     <h4 style="margin-top: 16px;">Presets</h4>
     <button id="loadMechander">Mechander — 388k splats (92 MB)</button>
     <br>
+    <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
+    <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
     <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto rotate
@@ -204,6 +206,10 @@
     document.getElementById('loadMechander').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
       loadSplat('../models/mechander.ply');
+    });
+    document.getElementById('loadGunpla').addEventListener('click', () => {
+      document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
+      loadSplat('../models/gunpla.ply');
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
