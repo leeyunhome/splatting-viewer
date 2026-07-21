@@ -442,6 +442,40 @@
         <span class="en">Along the way I read and documented the official 3DGS repo internals (diff-gaussian-rasterization, sparse_adam, fused_ssim, depth regularization) and COLMAP internals (SIFT, feature matching, SVD, multi-view geometry) at the code level — closing the gap between toy notebooks and real production code.</span>
       </p>
     </div>
+
+    <h3 class="reveal" style="margin-top:48px;"><span class="ko">두 번째 캡처: 건담 프라모델</span><span class="en">Second capture: a gunpla kit</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">같은 파이프라인을 다른 피사체로 다시 돌려 재현되는지 확인했습니다. 책상 위 건담 프라모델을 <b>24장 직접 촬영</b> → COLMAP 24/24장 전부 등록(희소 점 18,373개) → 3DGS 학습(30k iteration, depth regularization) → PSNR 29.5(7k) → 32.8(30k), 830,548개 splat.</span>
+        <span class="en">I re-ran the same pipeline on a different subject to check it reproduces. I <b>shot 24 photos</b> of a gunpla kit on a desk → COLMAP registered all 24/24 images (18,373 sparse points) → trained 3DGS (30k iterations, depth regularization) → PSNR 29.5 (7k) → 32.8 (30k), 830,548 splats.</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">실제로 찍은 사진 (24장 중 8장)</span><span class="en">The actual photos I shot (8 of 24)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/gunpla_input_01.jpg" alt="Gunpla capture frame 1" loading="lazy">
+      <img src="assets/gunpla_input_02.jpg" alt="Gunpla capture frame 2" loading="lazy">
+      <img src="assets/gunpla_input_03.jpg" alt="Gunpla capture frame 3" loading="lazy">
+      <img src="assets/gunpla_input_04.jpg" alt="Gunpla capture frame 4" loading="lazy">
+      <img src="assets/gunpla_input_05.jpg" alt="Gunpla capture frame 5" loading="lazy">
+      <img src="assets/gunpla_input_06.jpg" alt="Gunpla capture frame 6" loading="lazy">
+      <img src="assets/gunpla_input_07.jpg" alt="Gunpla capture frame 7" loading="lazy">
+      <img src="assets/gunpla_input_08.jpg" alt="Gunpla capture frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">INPUT</div><div class="t"><span class="ko">사진</span><span class="en">Photos</span></div><div class="d"><span class="ko">건담 프라모델 주위 24장</span><span class="en">24 around a gunpla kit</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">COLMAP</div><div class="t">SfM</div><div class="d"><span class="ko">24/24 등록 · 점 18,373개</span><span class="en">24/24 registered · 18,373 points</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · PSNR 32.8</span><span class="en">30k · PSNR 32.8</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">OUTPUT</div><div class="t"><span class="ko">splat (.ply)</span><span class="en">splats (.ply)</span></div><div class="d"><span class="ko">830,548개 · 뷰어용 380k로 pruning</span><span class="en">830,548 · pruned to 380k for the viewer</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">브라우저</span><span class="en">Browser</span></div><div class="d"><span class="ko">뷰어에서 실시간</span><span class="en">real-time in the viewer</span></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
