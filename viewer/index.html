@@ -98,6 +98,8 @@
     <h4>Load a model</h4>
     <input type="file" id="fileInput" accept=".ply,.splat,.spz,.ksplat" />
     <h4 style="margin-top: 16px;">Presets</h4>
+    <button id="loadTomato">Tomato greenhouse — 1.33M splats (71 MB)</button>
+    <br>
     <button id="loadMechander">Mechander — 388k splats (92 MB)</button>
     <br>
     <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
@@ -202,6 +204,10 @@
     });
     document.getElementById('loadDefault').addEventListener('click', () => {
       loadSplat("https://sparkjs.dev/assets/splats/butterfly.spz");
+    });
+    document.getElementById('loadTomato').addEventListener('click', () => {
+      document.querySelector('#info p').textContent = 'Loading Tomato greenhouse (71MB) — this may take 30s+...';
+      loadSplat('../models/tomato_greenhouse.ply');
     });
     document.getElementById('loadMechander').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
