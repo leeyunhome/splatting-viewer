@@ -161,11 +161,12 @@
     let currentSplat = null;
     let autoRotate = true;
 
-    async function loadSplat(source) {
+    async function loadSplat(source, invertY = false) {
       if (currentSplat) {
         scene.remove(currentSplat);
         currentSplat = null;
       }
+      document.getElementById('invertY').checked = invertY;
       document.querySelector('#info p').textContent = 'Loading splat model...';
       try {
         let splatMesh;
@@ -177,6 +178,7 @@
           splatMesh = new SplatMesh({ url });
         }
         splatMesh.position.set(0, 0, -3);
+        splatMesh.rotation.x = invertY ? Math.PI : 0;
         scene.add(splatMesh);
         currentSplat = splatMesh;
 
@@ -207,15 +209,15 @@
     });
     document.getElementById('loadTomato').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Tomato greenhouse (71MB) — this may take 30s+...';
-      loadSplat('../models/tomato_greenhouse.ply');
+      loadSplat('../models/tomato_greenhouse.ply', true);
     });
     document.getElementById('loadMechander').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
-      loadSplat('../models/mechander.ply');
+      loadSplat('../models/mechander.ply', false);
     });
     document.getElementById('loadGunpla').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
-      loadSplat('../models/gunpla.ply');
+      loadSplat('../models/gunpla.ply', false);
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
