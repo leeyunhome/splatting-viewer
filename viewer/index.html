@@ -104,7 +104,7 @@
     <br>
     <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
     <br>
-    <button id="loadAirplane">Vintage Airplane Museum — 316k splats (78 MB)</button>
+    <button id="loadAirplane">Vintage Airplane Museum — 315k splats (74 MB)</button>
     <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
     <label style="display: block; margin-top: 15px;">
@@ -163,6 +163,11 @@
     let currentSplat = null;
     let autoRotate = true;
 
+    function resetRotationLimits() {
+      controls.minAzimuthAngle = -Infinity;
+      controls.maxAzimuthAngle = Infinity;
+    }
+
     async function loadSplat(source, invertY = false) {
       if (currentSplat) {
         scene.remove(currentSplat);
@@ -207,23 +212,35 @@
       }
     });
     document.getElementById('loadDefault').addEventListener('click', () => {
+      resetRotationLimits();
       loadSplat("https://sparkjs.dev/assets/splats/butterfly.spz");
     });
     document.getElementById('loadTomato').addEventListener('click', () => {
+      resetRotationLimits();
       document.querySelector('#info p').textContent = 'Loading Tomato greenhouse (71MB) — this may take 30s+...';
       loadSplat('../models/tomato_greenhouse.ply', true);
     });
     document.getElementById('loadMechander').addEventListener('click', () => {
+      resetRotationLimits();
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
       loadSplat('../models/mechander.ply', false);
     });
     document.getElementById('loadGunpla').addEventListener('click', () => {
+      resetRotationLimits();
       document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
       loadSplat('../models/gunpla.ply', false);
     });
     document.getElementById('loadAirplane').addEventListener('click', () => {
-      document.querySelector('#info p').textContent = 'Loading Vintage Airplane Museum (78MB) — this may take 30s+...';
+      document.querySelector('#info p').textContent =
+        'Loading Vintage Airplane Museum (78MB) — this may take 30s+... ' +
+        'Captured from a ~74° arc only, so rotation is limited to avoid unreconstructed angles.';
       loadSplat('../models/vintage_airplane_museum.ply', false);
+      // 촬영이 74도 부채꼴 하나뿐이라 그 범위 밖은 재구성이 없음(잡음/스트릭).
+      // 자동회전은 끄고, 수동 오빗도 좁은 범위로 제한.
+      document.getElementById('autoRotate').checked = false;
+      autoRotate = false;
+      controls.minAzimuthAngle = -Math.PI / 5.5;  // 임시값 — 실제로 드래그해보고 깨지는 지점에 맞춰 조정 필요
+      controls.maxAzimuthAngle = Math.PI / 5.5;
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
