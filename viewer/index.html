@@ -108,13 +108,10 @@
     <br>
     <button id="loadUAV">UAV Drone (synthetic) — 292k splats (69 MB)</button>
     <br>
+    <button id="loadF14">F-14 Tomcat (synthetic) — 329k splats (82 MB)</button>
+    <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
-    <div id="uavCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5;">
-      Source model: <a href="https://sketchfab.com/3d-models/5f6f9115d1ae4d5c994fb348eb8e70aa" target="_blank" style="color:#9aa1bd;">"UAV (unmanned Aerial Vehicle)"</a>
-      by <a href="https://sketchfab.com/3d.xyz" target="_blank" style="color:#9aa1bd;">3d.xyz</a>,
-      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>.
-      Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.
-    </div>
+    <div id="modelCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5;"></div>
     <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto rotate
     </label>
@@ -223,31 +220,35 @@
       document.getElementById('autoRotate').checked = true;
       autoRotate = true;
     }
-    function setUavCreditVisible(visible) {
-      document.getElementById('uavCredit').style.display = visible ? 'block' : 'none';
+    function setModelCredit(html) {
+      const el = document.getElementById('modelCredit');
+      if (html) { el.innerHTML = html; el.style.display = 'block'; }
+      else { el.style.display = 'none'; }
     }
+    const CREDIT_UAV = 'Source model: <a href="https://sketchfab.com/3d-models/5f6f9115d1ae4d5c994fb348eb8e70aa" target="_blank" style="color:#9aa1bd;">"UAV (unmanned Aerial Vehicle)"</a> by <a href="https://sketchfab.com/3d.xyz" target="_blank" style="color:#9aa1bd;">3d.xyz</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.';
+    const CREDIT_F14 = 'Source model: <a href="https://sketchfab.com/3d-models/af915a32b088402f8b22e31f93af09af" target="_blank" style="color:#9aa1bd;">"F14"</a> by <a href="https://sketchfab.com/manilov.ap" target="_blank" style="color:#9aa1bd;">manilov.ap</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.';
 
     document.getElementById('loadDefault').addEventListener('click', () => {
-      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(null);
       loadSplat("https://sparkjs.dev/assets/splats/butterfly.spz");
     });
     document.getElementById('loadTomato').addEventListener('click', () => {
-      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(null);
       document.querySelector('#info p').textContent = 'Loading Tomato greenhouse (71MB) — this may take 30s+...';
       loadSplat('../models/tomato_greenhouse.ply', true);
     });
     document.getElementById('loadMechander').addEventListener('click', () => {
-      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(null);
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
       loadSplat('../models/mechander.ply', false);
     });
     document.getElementById('loadGunpla').addEventListener('click', () => {
-      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(null);
       document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
       loadSplat('../models/gunpla.ply', false);
     });
     document.getElementById('loadAirplane').addEventListener('click', () => {
-      setUavCreditVisible(false);
+      setModelCredit(null);
       document.querySelector('#info p').textContent =
         'Loading Vintage Airplane Museum (78MB) — this may take 30s+... ' +
         'Captured from a ~74° arc only, so rotation is limited to avoid unreconstructed angles.';
@@ -260,11 +261,18 @@
       controls.maxAzimuthAngle = Math.PI / 5.5;
     });
     document.getElementById('loadUAV').addEventListener('click', () => {
-      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(true);
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_UAV);
       document.querySelector('#info p').textContent =
         'Loading UAV Drone (69MB) — this may take 30s+... ' +
         'Synthetic render (Objaverse model + known camera poses), full-sphere coverage — no angle restrictions.';
       loadSplat('../models/uav_drone.ply', false);
+    });
+    document.getElementById('loadF14').addEventListener('click', () => {
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_F14);
+      document.querySelector('#info p').textContent =
+        'Loading F-14 Tomcat (82MB) — this may take 30s+... ' +
+        'Synthetic render (Objaverse model + known camera poses), full-sphere coverage — no angle restrictions.';
+      loadSplat('../models/f14_tomcat.ply', false);
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
