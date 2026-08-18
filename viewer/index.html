@@ -104,6 +104,8 @@
     <br>
     <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
     <br>
+    <button id="loadAirplane">Vintage Airplane Museum — 316k splats (78 MB)</button>
+    <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
     <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto rotate
@@ -218,6 +220,10 @@
     document.getElementById('loadGunpla').addEventListener('click', () => {
       document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
       loadSplat('../models/gunpla.ply', false);
+    });
+    document.getElementById('loadAirplane').addEventListener('click', () => {
+      document.querySelector('#info p').textContent = 'Loading Vintage Airplane Museum (78MB) — this may take 30s+...';
+      loadSplat('../models/vintage_airplane_museum.ply', false);
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
