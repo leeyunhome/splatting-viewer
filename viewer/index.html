@@ -106,7 +106,15 @@
     <br>
     <button id="loadAirplane">Vintage Airplane Museum — 315k splats (74 MB)</button>
     <br>
+    <button id="loadUAV">UAV Drone (synthetic) — 292k splats (69 MB)</button>
+    <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
+    <div id="uavCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5;">
+      Source model: <a href="https://sketchfab.com/3d-models/5f6f9115d1ae4d5c994fb348eb8e70aa" target="_blank" style="color:#9aa1bd;">"UAV (unmanned Aerial Vehicle)"</a>
+      by <a href="https://sketchfab.com/3d.xyz" target="_blank" style="color:#9aa1bd;">3d.xyz</a>,
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>.
+      Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.
+    </div>
     <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto rotate
     </label>
@@ -211,26 +219,35 @@
         loadSplat(file);
       }
     });
+    function resetAutoRotate() {
+      document.getElementById('autoRotate').checked = true;
+      autoRotate = true;
+    }
+    function setUavCreditVisible(visible) {
+      document.getElementById('uavCredit').style.display = visible ? 'block' : 'none';
+    }
+
     document.getElementById('loadDefault').addEventListener('click', () => {
-      resetRotationLimits();
+      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
       loadSplat("https://sparkjs.dev/assets/splats/butterfly.spz");
     });
     document.getElementById('loadTomato').addEventListener('click', () => {
-      resetRotationLimits();
+      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
       document.querySelector('#info p').textContent = 'Loading Tomato greenhouse (71MB) — this may take 30s+...';
       loadSplat('../models/tomato_greenhouse.ply', true);
     });
     document.getElementById('loadMechander').addEventListener('click', () => {
-      resetRotationLimits();
+      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
       document.querySelector('#info p').textContent = 'Loading Mechander (92MB) — this may take 30s+...';
       loadSplat('../models/mechander.ply', false);
     });
     document.getElementById('loadGunpla').addEventListener('click', () => {
-      resetRotationLimits();
+      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(false);
       document.querySelector('#info p').textContent = 'Loading Gunpla (94MB) — this may take 30s+...';
       loadSplat('../models/gunpla.ply', false);
     });
     document.getElementById('loadAirplane').addEventListener('click', () => {
+      setUavCreditVisible(false);
       document.querySelector('#info p').textContent =
         'Loading Vintage Airplane Museum (78MB) — this may take 30s+... ' +
         'Captured from a ~74° arc only, so rotation is limited to avoid unreconstructed angles.';
@@ -241,6 +258,13 @@
       autoRotate = false;
       controls.minAzimuthAngle = -Math.PI / 5.5;  // 임시값 — 실제로 드래그해보고 깨지는 지점에 맞춰 조정 필요
       controls.maxAzimuthAngle = Math.PI / 5.5;
+    });
+    document.getElementById('loadUAV').addEventListener('click', () => {
+      resetRotationLimits(); resetAutoRotate(); setUavCreditVisible(true);
+      document.querySelector('#info p').textContent =
+        'Loading UAV Drone (69MB) — this may take 30s+... ' +
+        'Synthetic render (Objaverse model + known camera poses), full-sphere coverage — no angle restrictions.';
+      loadSplat('../models/uav_drone.ply', false);
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;
