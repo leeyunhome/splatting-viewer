@@ -526,6 +526,45 @@
         <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">브라우저</span><span class="en">Browser</span></div><div class="d"><span class="ko">뷰어에서 실시간</span><span class="en">real-time in the viewer</span></div></div>
       </div>
     </div>
+
+    <h3 class="reveal" style="margin-top:48px;"><span class="ko">촬영이 아니라 렌더로: 실내 공간 재구성</span><span class="en">Not captured but rendered: reconstructing an interior space</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">앞의 씬들은 각도 범위를 역산해보니 좁은 부채꼴(고도각 1~7°, 방위각 39~74°)만 커버돼 있어, 공간을 조망하는 용도로는 쓸 수 없었습니다. 그래서 이번엔 촬영 대신, 학습에 필요한 시점 범위(고도각 45~85°, 방위각 360°)를 먼저 설계하고 CC0 공개 3D 모델(Blender Foundation 데모 "Classroom", Christophe Seux)을 그 설계대로 렌더링해 학습 데이터를 만들었습니다. 카메라 포즈를 직접 지정하므로 COLMAP도 필요 없습니다.</span>
+        <span class="en">Measuring the earlier scenes' camera coverage showed a narrow fan (elevation 1–7°, azimuth 39–74°) — unusable for a top-down, space-scale view. So this time, instead of shooting photos, I first designed the viewpoint range a space-overview needs (elevation 45–85°, full 360° azimuth) and rendered a CC0 3D model (Blender Foundation's "Classroom" demo file, by Christophe Seux) to match it. Camera poses are known by construction, so COLMAP isn't needed at all.</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">설계한 커버리지로 렌더한 프레임 (200장 중 8장)</span><span class="en">Frames rendered to the designed coverage (8 of 200)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/classroom_input_01.jpg" alt="Classroom render frame 1" loading="lazy">
+      <img src="assets/classroom_input_02.jpg" alt="Classroom render frame 2" loading="lazy">
+      <img src="assets/classroom_input_03.jpg" alt="Classroom render frame 3" loading="lazy">
+      <img src="assets/classroom_input_04.jpg" alt="Classroom render frame 4" loading="lazy">
+      <img src="assets/classroom_input_05.jpg" alt="Classroom render frame 5" loading="lazy">
+      <img src="assets/classroom_input_06.jpg" alt="Classroom render frame 6" loading="lazy">
+      <img src="assets/classroom_input_07.jpg" alt="Classroom render frame 7" loading="lazy">
+      <img src="assets/classroom_input_08.jpg" alt="Classroom render frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">SOURCE</div><div class="t"><span class="ko">CC0 3D 모델</span><span class="en">CC0 3D model</span></div><div class="d"><span class="ko">Blender Classroom</span><span class="en">Blender Classroom</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">RENDER</div><div class="t"><span class="ko">Blender</span><span class="en">Blender</span></div><div class="d"><span class="ko">커버리지 설계 렌더 200장 (COLMAP 불필요)</span><span class="en">200 frames, designed coverage (no COLMAP)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · 부유물 진단·프루닝</span><span class="en">30k · floater diagnosis · pruning</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">OUTPUT</div><div class="t"><span class="ko">splat (.ply)</span><span class="en">splats (.ply)</span></div><div class="d"><span class="ko">298,577개 · 70.6MB</span><span class="en">298,577 · 70.6MB</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">관제 데모</span><span class="en">Control demo</span></div><div class="d"><span class="ko">building-twin</span><span class="en">building-twin</span></div></div>
+      </div>
+    </div>
+
+    <div class="note reveal">
+      <span class="ko">역산해보니 고도각 45.1~84.5°, 방위각 358.2°로 설계한 대로 나왔습니다. 이 공간 위에 실제 설비 위치 기반 센서를 얹어 만든 결과물은 <a href="https://leeyunhome.github.io/building-twin/" target="_blank" rel="noopener">building-twin</a>에서 볼 수 있습니다.</span>
+      <span class="en">Re-measuring the trained cameras confirmed elevation 45.1–84.5° and azimuth 358.2° — matching the design. The result, with sensors anchored to real equipment positions in this space, is at <a href="https://leeyunhome.github.io/building-twin/" target="_blank" rel="noopener">building-twin</a>.</span>
+    </div>
   </div>
 </section>
 
