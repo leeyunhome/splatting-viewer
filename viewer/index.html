@@ -37,6 +37,7 @@
       border: 1px solid #242a39;
       border-radius: 8px;
       z-index: 100;
+      max-width: 320px;
       backdrop-filter: blur(6px);
     }
     #controls h4 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.02em; }
@@ -51,6 +52,9 @@
       max-width: 220px;
     }
     button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
       padding: 9px 15px;
       margin-top: 9px;
       background: #e8b04b;
@@ -61,6 +65,8 @@
       border-radius: 6px;
       cursor: pointer;
       transition: filter 0.15s;
+      white-space: normal;
+      text-align: left;
     }
     button:hover { filter: brightness(1.08); }
     button.ghost { background: transparent; color: #9aa1bd; border: 1px solid #242a39; }
