@@ -98,6 +98,34 @@
       backdrop-filter: blur(6px);
     }
     a.back:hover { color: #e8b04b; border-color: #e8b04b; }
+    #dragHint {
+      position: absolute;
+      left: 50%;
+      bottom: 36px;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: #14110a;
+      border: 1px solid #e8b04b;
+      color: #f0d9a8;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      white-space: nowrap;
+    }
+    #dragHint.show { opacity: 1; animation: dragHintPulse 1.6s ease-in-out infinite; }
+    #dragHint .ico { font-size: 18px; }
+    @keyframes dragHintPulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.04); }
+    }
   </style>
 </head>
 <body>
@@ -106,10 +134,12 @@
     <p>Load a preset below, or select your own PLY/splat file</p>
     <small>
       <strong>Controls</strong><br>
-      Left drag: rotate &nbsp;·&nbsp; Right drag / arrows: pan<br>
+      🖱️ Left drag: <strong style="color:#e8b04b;">rotate</strong> &nbsp;·&nbsp; Right drag / arrows: pan<br>
       Wheel / middle drag: zoom
     </small>
   </div>
+
+  <div id="dragHint"><span class="ico">🖱️</span> Drag to rotate the model</div>
 
   <div id="controls">
     <h4>Load a model</h4>
@@ -238,6 +268,7 @@
         scene.add(splatMesh);
         currentSplat = splatMesh;
         setViewDistance(viewDistance); // load 이벤트를 기다리지 않고 즉시 적용
+        showDragHint();
 
         splatMesh.addEventListener('load', () => {
           // SplatMesh는 표준 .geometry를 노출하지 않아 splat 개수를 여기서 읽을 수 없다
@@ -381,6 +412,28 @@
       renderer.render(scene, camera);
       if (currentSplat && autoRotate) currentSplat.rotation.y += 0.004;
     });
+
+    // 처음 방문자가 "이거 클릭이 아니라 드래그하는 화면이구나"를 바로 알게 — 모델 로드 시
+    // 잠깐 띄우고, 실제로 드래그를 한 번 하면 그 이후로는 다시 안 띄운다.
+    let dragHintDismissed = false;
+    let dragHintTimer = null;
+    function showDragHint() {
+      if (dragHintDismissed) return;
+      const el = document.getElementById('dragHint');
+      el.classList.add('show');
+      clearTimeout(dragHintTimer);
+      dragHintTimer = setTimeout(() => el.classList.remove('show'), 5000);
+    }
+    function dismissDragHint() {
+      dragHintDismissed = true;
+      clearTimeout(dragHintTimer);
+      document.getElementById('dragHint').classList.remove('show');
+    }
+    renderer.domElement.addEventListener('pointerdown', dismissDragHint, { once: true });
+
+    // 처음 열었을 때 빈 화면 대신 바로 뭔가 보이도록 기본 프리셋 자동 로드.
+    // Mechander를 고른 이유: 직접 촬영한 실물이라 "무엇을 실제로 했는지"가 가장 먼저 보임.
+    document.getElementById('loadMechander').click();
   </script>
 </body>
 </html>
