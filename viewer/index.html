@@ -122,6 +122,8 @@
     <br>
     <button id="loadClassroom">Classroom (synthetic) — 74 MB</button>
     <br>
+    <button id="loadPlantRoom">Plant Room (synthetic) — 92 MB</button>
+    <br>
     <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
     <div id="modelCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5;"></div>
     <label style="display: block; margin-top: 15px;">
@@ -260,6 +262,7 @@
     const CREDIT_TEETH = 'Source model: <a href="https://sketchfab.com/3d-models/free-teeth-base-mesh-b66fde0dc3eb44b0908096aa51b96431" target="_blank" style="color:#9aa1bd;">"Free Teeth Base Mesh"</a> by <a href="https://sketchfab.com/ferrumiron6" target="_blank" style="color:#9aa1bd;">ferrumiron6</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Material colors re-tinted (enamel/gum) from the original export. Rendered from known camera poses (pyrender), full-sphere coverage, and reconstructed with 3DGS — no COLMAP needed. Not a clinical scan.';
     const CREDIT_OFFICE = 'Source model: <a href="https://sketchfab.com/3d-models/minimalistic-modern-office-5540183da1c7452f810f8de33734879a" target="_blank" style="color:#9aa1bd;">"Minimalistic Modern Office"</a> by <a href="https://sketchfab.com/dylanheyes" target="_blank" style="color:#9aa1bd;">dylanheyes</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender), full-sphere coverage, and reconstructed with 3DGS — no COLMAP needed. Glass/floor reflections are hard to reconstruct with 3DGS, so streak artifacts remain visible from some angles. Hosted externally (Hugging Face Hub) due to size.';
     const CREDIT_CLASSROOM = 'Source model: <a href="https://www.blender.org/download/demo-files/" target="_blank" style="color:#9aa1bd;">"Classroom"</a> by Christophe Seux (Blender Foundation demo file), <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" style="color:#9aa1bd;">CC0</a>. Rendered from known camera poses (Blender) and reconstructed with 3DGS. Used in <a href="https://leeyunhome.github.io/building-twin/" target="_blank" style="color:#9aa1bd;">building-twin</a> as the base space for sensor-anchored monitoring.';
+    const CREDIT_PLANT_ROOM = 'Source model: <a href="https://sketchfab.com/3d-models/mechanical-systems-piping-room-sample-3b7dec0b450f43dfb2c6f8bb5401bbc6" target="_blank" style="color:#9aa1bd;">"Mechanical Systems Piping Room Sample"</a> by <a href="https://sketchfab.com/geppettomaster" target="_blank" style="color:#9aa1bd;">geppettomaster</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. This is a sealed room shell with the piping mounted inside, so the camera sphere used here orbits from a small radius <i>inside</i> the room rather than around it. Matte/painted materials, no glass — held-out PSNR 44.1dB, essentially zero floaters.';
 
     document.getElementById('loadDefault').addEventListener('click', () => {
       resetRotationLimits(); resetAutoRotate(); setModelCredit(null);
@@ -328,6 +331,13 @@
         'Loading Classroom (74MB) — this may take 30s+... ' +
         'Base space used in building-twin (sensor-anchored monitoring demo).';
       loadSplat('../models/classroom.ply', false, 16);
+    });
+    document.getElementById('loadPlantRoom').addEventListener('click', () => {
+      resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_PLANT_ROOM);
+      document.querySelector('#info p').textContent =
+        'Loading Plant Room (92MB) — this may take a while... ' +
+        'Synthetic render, camera sphere sits inside a sealed room (not orbiting outside it).';
+      loadSplat('../models/plant_room.ply', false, 0.5);
     });
     document.getElementById('autoRotate').addEventListener('change', (e) => {
       autoRotate = e.target.checked;

@@ -620,6 +620,53 @@
       <span class="ko">이 공간 위에 서로 다른 통신 규격(Modbus·BACnet·RTSP·MQTT·OCPP·접점)의 8개 설비 계통을 하나의 상태 모델로 통합하고, 경보가 뜨면 대응 절차(SOP)까지 같은 패널에 띄우도록 만든 결과물은 <a href="https://leeyunhome.github.io/mxd-twin/" target="_blank" rel="noopener">mxd-twin</a>에서 볼 수 있습니다. 실측 스캔이 아니라 공개 3D 모델을 렌더해 학습한 것이며, 센서 값은 시뮬레이션입니다.</span>
       <span class="en">On top of this space, eight building systems speaking different protocols (Modbus, BACnet, RTSP, MQTT, OCPP, dry contact) are normalized into one state model, and an alarm brings up its response procedure in the same panel — see <a href="https://leeyunhome.github.io/mxd-twin/" target="_blank" rel="noopener">mxd-twin</a>. This is a rendered public 3D model, not a real scan, and the sensor values are simulated.</span>
     </div>
+
+    <h3 class="reveal" style="margin-top:48px;"><span class="ko">밀폐된 방을 안쪽에서 촬영하듯: 기계실 배관</span><span class="en">Shooting a sealed room from the inside: a mechanical piping room</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">오피스 씬의 반사 문제와는 정반대 성격의 씬을 하나 더 시도했습니다. 배관·밸브가 늘어선 기계실(Sketchfab "Mechanical Systems Piping Room Sample", geppettomaster)인데, 재질이 전부 도장·금속 계열이라 유리 반사 위험이 거의 없습니다 — 대신 다른 문제가 있었습니다. 이 모델은 밀폐된 방 껍데기(벽·바닥·천장)이고 배관은 그 안쪽에 붙어 있어서, 지금까지 써온 "바깥에서 도는 궤도" 카메라로는 아예 안이 안 보였습니다.</span>
+        <span class="en">I tried a scene with the opposite character from the office's reflection problem: a mechanical room lined with pipes and valves (Sketchfab's "Mechanical Systems Piping Room Sample" by geppettomaster), whose materials are all paint and metal — almost no glass-reflection risk. But it had a different problem. The model is a sealed room shell (walls, floor, ceiling) with the piping mounted on the inside, so the "orbit from outside" camera I'd used everywhere else couldn't see into it at all.</span>
+      </p>
+      <p>
+        <span class="ko">해법은 새 기법이 아니라 같은 구면 궤도 스크립트의 반지름만 바꾸는 것이었습니다. 반지름을 방 안쪽에 들어올 만큼 작게 잡으면 "바깥에서 보는 궤도"가 "안에서 사방을 보는 궤도"로 뒤집힙니다. 배관이 몰린 코너로 중심을 옮기고 반지름 0.35(정규화 단위)로 200장을 렌더했습니다. 또한 alpha=0으로 처리된 배경용 메시(BackColor) 4개를 pyrender가 불투명하게 그리는 문제가 있어 렌더 대상에서 제외했습니다.</span>
+        <span class="en">The fix wasn't a new technique — just changing the radius in the same sphere-orbit script. Make the radius small enough to sit inside the room, and "orbit from outside" flips into "orbit looking outward from inside." I moved the center toward the corner where the piping is concentrated and rendered 200 frames at radius 0.35 (normalized units). I also excluded four alpha=0 backdrop meshes (BackColor) that pyrender was drawing as opaque instead of invisible.</span>
+      </p>
+      <p>
+        <span class="ko">결과: held-out 시점 PSNR 44.1dB(SSIM 0.995, LPIPS 0.038) — 이번에 학습한 씬 중 가장 높은 수치입니다. 스플랫 크기 분포도 이상치가 372,400개 중 1개뿐이라 부유물이 사실상 없습니다. 유리가 없는 재질이 재구성 품질에 그대로 반영된 결과입니다.</span>
+        <span class="en">Result: held-out PSNR of 44.1 dB (SSIM 0.995, LPIPS 0.038) — the highest of any scene trained this round. The splat-scale distribution has exactly one outlier out of 372,400 splats, so floaters are effectively absent. The absence of glass shows up directly in reconstruction quality.</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">기계실 학습 프레임 (200장 중 8장)</span><span class="en">Plant room training frames (8 of 200)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/plant_room_input_01.jpg" alt="Plant room render frame 1" loading="lazy">
+      <img src="assets/plant_room_input_02.jpg" alt="Plant room render frame 2" loading="lazy">
+      <img src="assets/plant_room_input_03.jpg" alt="Plant room render frame 3" loading="lazy">
+      <img src="assets/plant_room_input_04.jpg" alt="Plant room render frame 4" loading="lazy">
+      <img src="assets/plant_room_input_05.jpg" alt="Plant room render frame 5" loading="lazy">
+      <img src="assets/plant_room_input_06.jpg" alt="Plant room render frame 6" loading="lazy">
+      <img src="assets/plant_room_input_07.jpg" alt="Plant room render frame 7" loading="lazy">
+      <img src="assets/plant_room_input_08.jpg" alt="Plant room render frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">SOURCE</div><div class="t"><span class="ko">CC-BY 3D 모델</span><span class="en">CC-BY 3D model</span></div><div class="d"><span class="ko">Mechanical Systems Piping Room</span><span class="en">Mechanical Systems Piping Room</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">RENDER</div><div class="t"><span class="ko">pyrender</span><span class="en">pyrender</span></div><div class="d"><span class="ko">내부 시점 200장, 반지름 0.35 (COLMAP 불필요)</span><span class="en">200 interior-view frames, radius 0.35 (no COLMAP)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · held-out PSNR 44.1</span><span class="en">30k · held-out PSNR 44.1</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">OUTPUT</div><div class="t"><span class="ko">splat (.ply)</span><span class="en">splats (.ply)</span></div><div class="d"><span class="ko">372,400개 · 92.4MB</span><span class="en">372,400 · 92.4MB</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">뷰어 프리셋</span><span class="en">Viewer preset</span></div><div class="d"><span class="ko">부유물 사실상 0건</span><span class="en">essentially zero floaters</span></div></div>
+      </div>
+    </div>
+
+    <div class="note reveal">
+      <span class="ko">이 씬은 <a href="viewer/">뷰어</a>의 "Plant Room" 프리셋으로 직접 회전시켜볼 수 있습니다.</span>
+      <span class="en">This scene is available as the "Plant Room" preset in the <a href="viewer/">viewer</a> — rotate it yourself.</span>
+    </div>
   </div>
 </section>
 
