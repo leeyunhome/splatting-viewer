@@ -31,6 +31,7 @@
       position: absolute;
       top: 12px;
       right: 12px;
+      bottom: 12px;
       color: #e9ebf3;
       background: rgba(10, 12, 18, 0.82);
       padding: 16px;
@@ -39,8 +40,18 @@
       z-index: 100;
       max-width: 320px;
       backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
     }
+    #controls > * { flex: none; }
     #controls h4 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.02em; }
+    #presetList {
+      flex: 1 1 auto;
+      min-height: 80px;
+      overflow-y: auto;
+      padding-right: 6px;
+      margin-right: -6px;
+    }
     #fileInput {
       margin-top: 8px;
       padding: 5px;
@@ -104,28 +115,30 @@
     <h4>Load a model</h4>
     <input type="file" id="fileInput" accept=".ply,.splat,.spz,.ksplat" />
     <h4 style="margin-top: 16px;">Presets</h4>
-    <button id="loadTomato">Tomato greenhouse — 1.33M splats (71 MB)</button>
-    <br>
-    <button id="loadMechander">Mechander — 388k splats (92 MB)</button>
-    <br>
-    <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
-    <br>
-    <button id="loadAirplane">Vintage Airplane Museum — 315k splats (74 MB)</button>
-    <br>
-    <button id="loadUAV">UAV Drone (synthetic) — 292k splats (69 MB)</button>
-    <br>
-    <button id="loadF14">F-14 Tomcat (synthetic) — 329k splats (82 MB)</button>
-    <br>
-    <button id="loadTeeth">Teeth (synthetic) — 298k splats (70 MB)</button>
-    <br>
-    <button id="loadOffice">Modern Office (synthetic) — 1.35M splats (319 MB, hosted externally)</button>
-    <br>
-    <button id="loadClassroom">Classroom (synthetic) — 74 MB</button>
-    <br>
-    <button id="loadPlantRoom">Plant Room (synthetic) — 92 MB</button>
-    <br>
-    <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
-    <div id="modelCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5;"></div>
+    <div id="presetList">
+      <button id="loadTomato">Tomato greenhouse — 1.33M splats (71 MB)</button>
+      <br>
+      <button id="loadMechander">Mechander — 388k splats (92 MB)</button>
+      <br>
+      <button id="loadGunpla">Gunpla — 380k splats (94 MB)</button>
+      <br>
+      <button id="loadAirplane">Vintage Airplane Museum — 315k splats (74 MB)</button>
+      <br>
+      <button id="loadUAV">UAV Drone (synthetic) — 292k splats (69 MB)</button>
+      <br>
+      <button id="loadF14">F-14 Tomcat (synthetic) — 329k splats (82 MB)</button>
+      <br>
+      <button id="loadTeeth">Teeth (synthetic) — 298k splats (70 MB)</button>
+      <br>
+      <button id="loadOffice">Modern Office (synthetic) — 1.35M splats (319 MB, hosted externally)</button>
+      <br>
+      <button id="loadClassroom">Classroom (synthetic) — 74 MB</button>
+      <br>
+      <button id="loadPlantRoom">Plant Room (synthetic) — 92 MB</button>
+      <br>
+      <button id="loadDefault" class="ghost">Default Butterfly (small)</button>
+    </div>
+    <div id="modelCredit" style="display:none; margin-top: 8px; font-size: 11px; color: #626a86; line-height: 1.5; max-height: 90px; overflow-y: auto;"></div>
     <label style="display: block; margin-top: 15px;">
       <input type="checkbox" id="autoRotate" checked> Auto rotate
     </label>
@@ -331,6 +344,17 @@
         'Loading Classroom (74MB) — this may take 30s+... ' +
         'Base space used in building-twin (sensor-anchored monitoring demo).';
       loadSplat('../models/classroom.ply', false, 16);
+      // 정면(고도각 0)보다 위에서 비스듬히 내려다보는 "돌하우스" 시점이 교실 배치를 한눈에 보여줘 기본값으로 채택.
+      const el = THREE.MathUtils.degToRad(55);
+      const az = THREE.MathUtils.degToRad(35);
+      const dist = 16;
+      camera.position.set(
+        dist * Math.sin(az) * Math.cos(el),
+        dist * Math.sin(el),
+        -3 + dist * Math.cos(az) * Math.cos(el)
+      );
+      controls.target.set(0, 0, -3);
+      controls.update();
     });
     document.getElementById('loadPlantRoom').addEventListener('click', () => {
       resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_PLANT_ROOM);
@@ -355,7 +379,7 @@
     renderer.setAnimationLoop(() => {
       controls.update();
       renderer.render(scene, camera);
-      if (currentSplat && autoRotate) currentSplat.rotation.y += 0.01;
+      if (currentSplat && autoRotate) currentSplat.rotation.y += 0.004;
     });
   </script>
 </body>
