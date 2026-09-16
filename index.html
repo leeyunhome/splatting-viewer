@@ -565,6 +565,55 @@
       <span class="ko">역산해보니 고도각 45.1~84.5°, 방위각 358.2°로 설계한 대로 나왔습니다. 이 공간 위에 실제 설비 위치 기반 센서를 얹어 만든 결과물은 <a href="https://leeyunhome.github.io/building-twin/" target="_blank" rel="noopener">building-twin</a>에서 볼 수 있습니다.</span>
       <span class="en">Re-measuring the trained cameras confirmed elevation 45.1–84.5° and azimuth 358.2° — matching the design. The result, with sensors anchored to real equipment positions in this space, is at <a href="https://leeyunhome.github.io/building-twin/" target="_blank" rel="noopener">building-twin</a>.</span>
     </div>
+
+    <h3 class="reveal" style="margin-top:48px;"><span class="ko">같은 파이프라인을 오피스 공간에: 반사가 만든 문제</span><span class="en">The same pipeline on an office: the problem reflections caused</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">교실 한 공간으로만 검증된 파이프라인이라, 성격이 다른 공간에도 통하는지 확인하려고 오피스로 한 번 더 돌렸습니다. CC-BY 공개 3D 모델(Sketchfab "Minimalistic Modern Office", dylanheyes)을 고도각 8~65°·방위각 360°로 200장 렌더해 학습했고, held-out 시점 PSNR 23.1dB(SSIM 0.918)가 나왔습니다.</span>
+        <span class="en">The pipeline had only been validated on one classroom, so I ran it again on a different kind of space. I rendered a CC-BY 3D model (Sketchfab's "Minimalistic Modern Office" by dylanheyes) across elevation 8–65° and full azimuth — 200 frames — and trained on it, reaching 23.1 dB PSNR (SSIM 0.918) on held-out views.</span>
+      </p>
+      <p>
+        <span class="ko">그런데 유리 파사드 바깥으로 반사 스트릭이 길게 뻗어 나왔습니다. 교실에서 통했던 스케일·불투명도 기준 프루닝이 여기서는 전혀 듣지 않았는데, 원인이 달랐기 때문입니다 — 이건 관측되지 않은 공간의 부유물이 아니라 <b>시점에 따라 달라지는 반사를 그대로 재구성한 것</b>이라, 스플랫 값이 작지도 투명하지도 않았습니다. 값으로는 걸러지지 않는 대상이었습니다.</span>
+        <span class="en">But reflection streaks trailed out past the glass facade. Pruning by scale and opacity — which had worked on the classroom — did nothing here, because the cause was different: these weren't floaters in unobserved space but <b>view-dependent reflections faithfully reconstructed</b>, so their values were neither small nor transparent. They were not filterable by value.</span>
+      </p>
+      <p>
+        <span class="ko">그래서 기준을 값이 아니라 <b>공간</b>으로 바꿨습니다. 스플랫 좌표를 축별로 투영해 방의 실제 경계를 읽어낸 뒤 그 박스 밖을 잘라냈더니, 스트릭이 사라지면서 용량도 함께 줄었습니다 — 1,350,343개/319MB에서 272,624개/64.5MB로. 대가로 유리 너머 배경도 같이 잘려 창밖은 비어 보입니다.</span>
+        <span class="en">So I switched the criterion from value to <b>space</b>. Projecting the splat coordinates axis by axis gave me the room's actual bounds; cropping outside that box removed the streaks and shrank the file at the same time — from 1,350,343 splats / 319 MB to 272,624 / 64.5 MB. The cost: the backdrop seen through the glass went too, so the windows read as empty.</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">오피스 공간 학습 프레임 (200장 중 8장)</span><span class="en">Office training frames (8 of 200)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/modern_office_input_01.jpg" alt="Modern office render frame 1" loading="lazy">
+      <img src="assets/modern_office_input_02.jpg" alt="Modern office render frame 2" loading="lazy">
+      <img src="assets/modern_office_input_03.jpg" alt="Modern office render frame 3" loading="lazy">
+      <img src="assets/modern_office_input_04.jpg" alt="Modern office render frame 4" loading="lazy">
+      <img src="assets/modern_office_input_05.jpg" alt="Modern office render frame 5" loading="lazy">
+      <img src="assets/modern_office_input_06.jpg" alt="Modern office render frame 6" loading="lazy">
+      <img src="assets/modern_office_input_07.jpg" alt="Modern office render frame 7" loading="lazy">
+      <img src="assets/modern_office_input_08.jpg" alt="Modern office render frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">SOURCE</div><div class="t"><span class="ko">CC-BY 3D 모델</span><span class="en">CC-BY 3D model</span></div><div class="d"><span class="ko">Minimalistic Modern Office</span><span class="en">Minimalistic Modern Office</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">RENDER</div><div class="t"><span class="ko">pyrender</span><span class="en">pyrender</span></div><div class="d"><span class="ko">고도각 8~65° 200장 (COLMAP 불필요)</span><span class="en">200 frames, elev 8–65° (no COLMAP)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · held-out PSNR 23.1</span><span class="en">30k · held-out PSNR 23.1</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">CLEAN</div><div class="t"><span class="ko">공간 크롭</span><span class="en">Spatial crop</span></div><div class="d"><span class="ko">반사 스트릭 제거 · 79.8% 감축</span><span class="en">streaks removed · −79.8%</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">OUTPUT</div><div class="t"><span class="ko">splat (.ply)</span><span class="en">splats (.ply)</span></div><div class="d"><span class="ko">272,624개 · 64.5MB</span><span class="en">272,624 · 64.5MB</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">관제 데모</span><span class="en">Control demo</span></div><div class="d"><span class="ko">mxd-twin</span><span class="en">mxd-twin</span></div></div>
+      </div>
+    </div>
+
+    <div class="note reveal">
+      <span class="ko">이 공간 위에 서로 다른 통신 규격(Modbus·BACnet·RTSP·MQTT·OCPP·접점)의 8개 설비 계통을 하나의 상태 모델로 통합하고, 경보가 뜨면 대응 절차(SOP)까지 같은 패널에 띄우도록 만든 결과물은 <a href="https://leeyunhome.github.io/mxd-twin/" target="_blank" rel="noopener">mxd-twin</a>에서 볼 수 있습니다. 실측 스캔이 아니라 공개 3D 모델을 렌더해 학습한 것이며, 센서 값은 시뮬레이션입니다.</span>
+      <span class="en">On top of this space, eight building systems speaking different protocols (Modbus, BACnet, RTSP, MQTT, OCPP, dry contact) are normalized into one state model, and an alarm brings up its response procedure in the same panel — see <a href="https://leeyunhome.github.io/mxd-twin/" target="_blank" rel="noopener">mxd-twin</a>. This is a rendered public 3D model, not a real scan, and the sensor values are simulated.</span>
+    </div>
   </div>
 </section>
 
