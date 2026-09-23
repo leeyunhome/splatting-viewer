@@ -158,7 +158,7 @@
       <br>
       <button id="loadF14">F-14 Tomcat (synthetic) — 329k splats (82 MB)</button>
       <br>
-      <button id="loadTeeth">Teeth (synthetic) — 298k splats (70 MB)</button>
+      <button id="loadTeeth">Permanent Dentition (synthetic) — 332k splats (78 MB)</button>
       <br>
       <button id="loadOffice">Modern Office (synthetic) — 1.35M splats (319 MB, hosted externally)</button>
       <br>
@@ -303,7 +303,7 @@
     }
     const CREDIT_UAV = 'Source model: <a href="https://sketchfab.com/3d-models/5f6f9115d1ae4d5c994fb348eb8e70aa" target="_blank" style="color:#9aa1bd;">"UAV (unmanned Aerial Vehicle)"</a> by <a href="https://sketchfab.com/3d.xyz" target="_blank" style="color:#9aa1bd;">3d.xyz</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.';
     const CREDIT_F14 = 'Source model: <a href="https://sketchfab.com/3d-models/af915a32b088402f8b22e31f93af09af" target="_blank" style="color:#9aa1bd;">"F14"</a> by <a href="https://sketchfab.com/manilov.ap" target="_blank" style="color:#9aa1bd;">manilov.ap</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender) and reconstructed with 3DGS — no COLMAP needed.';
-    const CREDIT_TEETH = 'Source model: <a href="https://sketchfab.com/3d-models/free-teeth-base-mesh-b66fde0dc3eb44b0908096aa51b96431" target="_blank" style="color:#9aa1bd;">"Free Teeth Base Mesh"</a> by <a href="https://sketchfab.com/ferrumiron6" target="_blank" style="color:#9aa1bd;">ferrumiron6</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Material colors re-tinted (enamel/gum) from the original export. Rendered from known camera poses (pyrender), full-sphere coverage, and reconstructed with 3DGS — no COLMAP needed. Not a clinical scan.';
+    const CREDIT_TEETH = 'Source model: <a href="https://sketchfab.com/3d-models/permanent-dentition-2f69d7b59c3e4a6a8bcae041bd8e591b" target="_blank" style="color:#9aa1bd;">"Permanent Dentition"</a> by <a href="https://sketchfab.com/DundeeDental" target="_blank" style="color:#9aa1bd;">DundeeDental</a> (University of Dundee, School of Dentistry — modeled from CT data), <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender), full-sphere coverage, and reconstructed with 3DGS — no COLMAP needed. Held-out PSNR 42.1dB. Not a clinical scan.';
     const CREDIT_OFFICE = 'Source model: <a href="https://sketchfab.com/3d-models/minimalistic-modern-office-5540183da1c7452f810f8de33734879a" target="_blank" style="color:#9aa1bd;">"Minimalistic Modern Office"</a> by <a href="https://sketchfab.com/dylanheyes" target="_blank" style="color:#9aa1bd;">dylanheyes</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. Rendered from known camera poses (pyrender), full-sphere coverage, and reconstructed with 3DGS — no COLMAP needed. Glass/floor reflections are hard to reconstruct with 3DGS, so streak artifacts remain visible from some angles. Hosted externally (Hugging Face Hub) due to size.';
     const CREDIT_CLASSROOM = 'Source model: <a href="https://www.blender.org/download/demo-files/" target="_blank" style="color:#9aa1bd;">"Classroom"</a> by Christophe Seux (Blender Foundation demo file), <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" style="color:#9aa1bd;">CC0</a>. Rendered from known camera poses (Blender) and reconstructed with 3DGS. Used in <a href="https://leeyunhome.github.io/building-twin/" target="_blank" style="color:#9aa1bd;">building-twin</a> as the base space for sensor-anchored monitoring.';
     const CREDIT_PLANT_ROOM = 'Source model: <a href="https://sketchfab.com/3d-models/mechanical-systems-piping-room-sample-3b7dec0b450f43dfb2c6f8bb5401bbc6" target="_blank" style="color:#9aa1bd;">"Mechanical Systems Piping Room Sample"</a> by <a href="https://sketchfab.com/geppettomaster" target="_blank" style="color:#9aa1bd;">geppettomaster</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:#9aa1bd;">CC BY 4.0</a>. This is a sealed room shell with the piping mounted inside, so the camera sphere used here orbits from a small radius <i>inside</i> the room rather than around it. Matte/painted materials, no glass — held-out PSNR 44.1dB, essentially zero floaters.';
@@ -357,9 +357,9 @@
     document.getElementById('loadTeeth').addEventListener('click', () => {
       resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_TEETH);
       document.querySelector('#info p').textContent =
-        'Loading Teeth (70MB) — this may take 30s+... ' +
+        'Loading Permanent Dentition (78MB) — this may take 30s+... ' +
         'Synthetic render (Sketchfab model + known camera poses), full-sphere coverage — no angle restrictions.';
-      loadSplat('../models/teeth.ply', false, 1.3);
+      loadSplat('../models/permanent_dentition.ply', false, 1.3);
     });
     document.getElementById('loadOffice').addEventListener('click', () => {
       resetRotationLimits(); resetAutoRotate(); setModelCredit(CREDIT_OFFICE);
