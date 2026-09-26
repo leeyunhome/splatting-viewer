@@ -433,7 +433,17 @@
 
     // 처음 열었을 때 빈 화면 대신 바로 뭔가 보이도록 기본 프리셋 자동 로드.
     // Mechander를 고른 이유: 직접 촬영한 실물이라 "무엇을 실제로 했는지"가 가장 먼저 보임.
-    document.getElementById('loadMechander').click();
+    // ?model=teeth 같은 쿼리 파라미터가 있으면 그 프리셋을 대신 로드 — 외부 링크(이력서·포트폴리오
+    // PDF 등)에서 특정 모델로 바로 딥링크할 때 사용.
+    const MODEL_BUTTONS = {
+      teeth: 'loadTeeth', dentition: 'loadTeeth',
+      tomato: 'loadTomato', mechander: 'loadMechander', gunpla: 'loadGunpla',
+      airplane: 'loadAirplane', uav: 'loadUAV', f14: 'loadF14',
+      office: 'loadOffice', classroom: 'loadClassroom', plantroom: 'loadPlantRoom',
+    };
+    const requestedModel = new URLSearchParams(window.location.search).get('model');
+    const initialBtnId = MODEL_BUTTONS[requestedModel] || 'loadMechander';
+    document.getElementById(initialBtnId).click();
   </script>
 </body>
 </html>

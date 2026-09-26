@@ -694,6 +694,53 @@
         <span class="en">Three different spaces, three different failure points — but none of them needed a new tool or a new theory. Each time, I narrowed down why the same pipeline wasn't working this time and adjusted exactly that one thing.</span>
       </p>
     </div>
+
+    <h3 class="reveal" id="teeth" style="margin-top:56px;"><span class="ko">공간에서 오브젝트로: 치아 모델</span><span class="en">From spaces to an object: a dental model</span></h3>
+    <div class="prose reveal">
+      <p>
+        <span class="ko">같은 파이프라인(카메라 포즈 설계 → pyrender 렌더 → 3DGS 학습, COLMAP 없음)을 이번엔 공간이 아니라 오브젝트 단독 촬영 시나리오에 적용했습니다. 공개 3D 치열 모델(Sketchfab "Permanent Dentition", DundeeDental — University of Dundee 치과대학이 CT 데이터로 제작, CC BY 4.0)을 전구면(고도각 -60~85°, 방위각 360°) 200장으로 렌더해 학습했습니다.</span>
+        <span class="en">I applied the same pipeline (design camera poses → render with pyrender → train 3DGS, no COLMAP) to a single-object capture scenario instead of a space. I rendered a public dental 3D model (Sketchfab's "Permanent Dentition" by DundeeDental — modeled by the University of Dundee's School of Dentistry from CT data, CC BY 4.0) across a full sphere (elevation -60–85°, full 360° azimuth) — 200 frames.</span>
+      </p>
+      <p>
+        <span class="ko">교실·오피스·기계실은 궤도가 바깥이거나 안쪽이거나 절반짜리였는데, 이번엔 작은 오브젝트 주위를 완전히 감싸는 전구면 궤도라 애초에 미관측 각도가 남지 않았습니다. 그 결과 교실에서 골치였던 배경 부유물이 이번엔 나타나지 않았습니다. Held-out 40개 시점 기준 PSNR 42.0dB(SSIM 0.995, LPIPS 0.019)로, 지금까지 렌더 기반 씬 중 가장 높은 수치입니다.</span>
+        <span class="en">The classroom, office, and plant room each covered only part of a sphere — outside, or inside, or half of one. Here the orbit fully wraps a small object, so no angle was ever left unobserved, and the background floaters that plagued the classroom never appeared. Measured on 40 held-out views, PSNR reached 42.0dB (SSIM 0.995, LPIPS 0.019) — the highest of any rendered scene in this series.</span>
+      </p>
+      <p>
+        <span class="ko">GitHub 업로드 한도(100MB)에 맞추려고 44만 2,134개 스플랫을 불투명도 기준으로 33만 1,600개까지 프루닝했는데(105MB→78MB), 화질 차이는 눈으로 거의 구분되지 않았습니다.</span>
+        <span class="en">To fit GitHub's 100MB upload limit, I pruned 442,134 splats down to 331,600 by opacity threshold (105MB → 78MB) — with almost no visible quality difference.</span>
+      </p>
+    </div>
+
+    <h3 class="reveal" style="margin-top:28px;"><span class="ko">전구면으로 렌더한 프레임 (200장 중 8장)</span><span class="en">Full-sphere rendered frames (8 of 200)</span></h3>
+    <div class="gallery reveal">
+      <img src="assets/dentition_input_01.jpg" alt="Dental model render frame 1" loading="lazy">
+      <img src="assets/dentition_input_02.jpg" alt="Dental model render frame 2" loading="lazy">
+      <img src="assets/dentition_input_03.jpg" alt="Dental model render frame 3" loading="lazy">
+      <img src="assets/dentition_input_04.jpg" alt="Dental model render frame 4" loading="lazy">
+      <img src="assets/dentition_input_05.jpg" alt="Dental model render frame 5" loading="lazy">
+      <img src="assets/dentition_input_06.jpg" alt="Dental model render frame 6" loading="lazy">
+      <img src="assets/dentition_input_07.jpg" alt="Dental model render frame 7" loading="lazy">
+      <img src="assets/dentition_input_08.jpg" alt="Dental model render frame 8" loading="lazy">
+    </div>
+
+    <div class="pipe-scroll reveal">
+      <div class="pipe">
+        <div class="node"><div class="k">SOURCE</div><div class="t"><span class="ko">CC BY 3D 모델</span><span class="en">CC BY 3D model</span></div><div class="d"><span class="ko">Permanent Dentition (CT 기반)</span><span class="en">Permanent Dentition (from CT data)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">RENDER</div><div class="t"><span class="ko">pyrender</span><span class="en">pyrender</span></div><div class="d"><span class="ko">전구면 200장 (COLMAP 불필요)</span><span class="en">200 frames, full sphere (no COLMAP)</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">TRAIN</div><div class="t">3DGS</div><div class="d"><span class="ko">30k · held-out PSNR 42.0</span><span class="en">30k · held-out PSNR 42.0</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">PRUNE</div><div class="t"><span class="ko">불투명도 기준</span><span class="en">Opacity threshold</span></div><div class="d"><span class="ko">44.2만→33.2만개 · 105→78MB</span><span class="en">442k→332k · 105→78MB</span></div></div>
+        <div class="arr">→</div>
+        <div class="node"><div class="k">VIEW</div><div class="t"><span class="ko">뷰어 프리셋</span><span class="en">Viewer preset</span></div><div class="d"><span class="ko">Permanent Dentition</span><span class="en">Permanent Dentition</span></div></div>
+      </div>
+    </div>
+
+    <div class="note reveal">
+      <span class="ko">이 씬은 <a href="viewer/?model=teeth">뷰어에서 바로 열어</a> 회전시켜볼 수 있습니다 — 실제 스캔이 아니라 대학 치과대학이 만든 공개 3D 모델을 렌더해 학습한 것입니다.</span>
+      <span class="en"><a href="viewer/?model=teeth">Open this scene directly in the viewer</a> and rotate it yourself — this is a rendered public 3D model, not a real scan.</span>
+    </div>
   </div>
 </section>
 
