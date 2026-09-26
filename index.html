@@ -279,6 +279,25 @@
     font-size: 0.92rem; color: var(--ink-dim);
   }
 
+  /* ── Case tabs (act-3: pick one capture case instead of scrolling all 7) ── */
+  .case-tabs {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 28px; margin-bottom: 8px;
+  }
+  .case-tab {
+    font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.02em;
+    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink-dim); cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+  .case-tab:hover { border-color: var(--ink-mute); color: var(--ink); }
+  .case-tab.active {
+    background: var(--amber); color: var(--amber-deep);
+    border-color: var(--amber); font-weight: 500;
+  }
+  .case-panel[hidden] { display: none; }
+  .case-panel > h3:first-child { margin-top: 8px !important; }
+
   /* ── Footer ── */
   footer { border-top: 1px solid var(--line); padding-block: 44px; }
   footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-start; }
@@ -414,6 +433,21 @@
   <div class="wrap">
     <div class="eyebrow reveal"><span class="idx">03</span><span class="ko">사진에서 3D 모델까지</span><span class="en">From photos to a 3D model</span></div>
     <h2 class="reveal"><span class="ko">제가 찍은 사진으로 재구성했습니다</span><span class="en">Reconstructed from photos I took myself</span></h2>
+    <p class="lead reveal">
+      <span class="ko">같은 사진→3D 파이프라인을 성격이 다른 7개 대상에 돌려본 기록입니다. 아래에서 하나씩 골라 보세요.</span>
+      <span class="en">The same photo-to-3D pipeline, run on 7 different subjects. Pick one below.</span>
+    </p>
+    <div class="case-tabs reveal" role="tablist" aria-label="Case study">
+      <button class="case-tab" data-case="mechander" role="tab"><span class="ko">피규어 (Mechander)</span><span class="en">Figure (Mechander)</span></button>
+      <button class="case-tab" data-case="gunpla" role="tab"><span class="ko">건담 프라모델</span><span class="en">Gunpla kit</span></button>
+      <button class="case-tab" data-case="tomato" role="tab"><span class="ko">토마토 온실</span><span class="en">Tomato greenhouse</span></button>
+      <button class="case-tab" data-case="classroom" role="tab"><span class="ko">교실</span><span class="en">Classroom</span></button>
+      <button class="case-tab" data-case="office" role="tab"><span class="ko">오피스</span><span class="en">Office</span></button>
+      <button class="case-tab" data-case="plantroom" role="tab"><span class="ko">기계실</span><span class="en">Plant room</span></button>
+      <button class="case-tab" data-case="teeth" role="tab"><span class="ko">치아 모델</span><span class="en">Dental model</span></button>
+    </div>
+
+    <div class="case-panel" data-case="mechander">
     <div class="prose reveal">
       <p>
         <span class="ko">이론을 실제 사물에 적용했습니다. 피규어 하나(Mechander)를 여러 각도에서 <b>26장 직접 촬영</b> → COLMAP으로 카메라 포즈 복원 → 3DGS 학습(30k iteration, depth regularization) → 결과는 아래 뷰어에서 그대로 돌아갑니다. 남의 데이터셋이 아니라, 방 안에서 직접 찍은 사진으로 끝까지 돌렸습니다.</span>
@@ -459,7 +493,10 @@
       </p>
     </div>
 
-    <h3 class="reveal" style="margin-top:48px;"><span class="ko">두 번째 캡처: 건담 프라모델</span><span class="en">Second capture: a gunpla kit</span></h3>
+    </div><!-- /case-panel mechander -->
+
+    <div class="case-panel" data-case="gunpla">
+    <h3 class="reveal" style="margin-top:0;"><span class="ko">두 번째 캡처: 건담 프라모델</span><span class="en">Second capture: a gunpla kit</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">같은 파이프라인을 다른 피사체로 다시 돌려 재현되는지 확인했습니다. 책상 위 건담 프라모델을 <b>24장 직접 촬영</b> → COLMAP 24/24장 전부 등록(희소 점 18,373개) → 3DGS 학습(30k iteration, depth regularization) → PSNR 29.5(7k) → 32.8(30k), 830,548개 splat.</span>
@@ -493,7 +530,10 @@
       </div>
     </div>
 
-    <h3 class="reveal" style="margin-top:48px;"><span class="ko">공개 데이터셋으로 검증: 토마토 온실</span><span class="en">Verified with a public dataset: tomato greenhouse</span></h3>
+    </div><!-- /case-panel gunpla -->
+
+    <div class="case-panel" data-case="tomato">
+    <h3 class="reveal" style="margin-top:0;"><span class="ko">공개 데이터셋으로 검증: 토마토 온실</span><span class="en">Verified with a public dataset: tomato greenhouse</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">이 씬은 제가 촬영하지 않았습니다. 출처는 Pexels 공개 영상 <a href="https://www.pexels.com/video/tomato-farm-in-greenhouse-10179855/" target="_blank" rel="noopener">"Tomato farm in greenhouse"</a> (Mehdi Alaoui, <a href="https://www.pexels.com/license/" target="_blank" rel="noopener">Pexels License</a>) — 실외·다중 오브젝트 씬에서도 같은 파이프라인이 버티는지 확인하려고 골랐습니다. 영상에서 217프레임을 뽑아 COLMAP으로 190프레임 등록, 3DGS 30k iteration 학습, held-out PSNR 30.73dB(train 31.08 — 과적합 아님).</span>
@@ -527,7 +567,10 @@
       </div>
     </div>
 
-    <h3 class="reveal" style="margin-top:56px;"><span class="ko">공간 세 개, 문제 세 개: 같은 파이프라인이 매번 다르게 깨진 이야기</span><span class="en">Three spaces, three problems: the same pipeline breaking differently each time</span></h3>
+    </div><!-- /case-panel tomato -->
+
+    <div class="case-panel" data-case="classroom">
+    <h3 class="reveal" style="margin-top:0;"><span class="ko">공간 세 개, 문제 세 개: 같은 파이프라인이 매번 다르게 깨진 이야기</span><span class="en">Three spaces, three problems: the same pipeline breaking differently each time</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">여기서부터는 실사 촬영 대신 렌더 기반 파이프라인(카메라 포즈를 직접 설계 → COLMAP 없이 학습)을 성격이 전혀 다른 공간 세 곳에 그대로 적용해본 기록입니다. 매번 같은 방법을 썼는데도 매번 다른 지점에서 깨졌고, 그때마다 새 기법이 아니라 기존 스크립트의 파라미터 하나를 바꿔서 풀었습니다 — 교실(커버리지 설계), 오피스(반사 재질), 기계실(밀폐 공간) 순서로 이어집니다.</span>
@@ -574,7 +617,10 @@
       <span class="en">Re-measuring the trained cameras confirmed elevation 45.1–84.5° and azimuth 358.2° — matching the design. The result, with sensors anchored to real equipment positions in this space, is at <a href="https://leeyunhome.github.io/building-twin/" target="_blank" rel="noopener">building-twin</a>.</span>
     </div>
 
-    <h3 class="reveal" style="margin-top:48px;"><span class="ko">2. 오피스 — 반사가 만든 문제</span><span class="en">2. Office — the problem reflections caused</span></h3>
+    </div><!-- /case-panel classroom -->
+
+    <div class="case-panel" data-case="office">
+    <h3 class="reveal" style="margin-top:0;"><span class="ko">2. 오피스 — 반사가 만든 문제</span><span class="en">2. Office — the problem reflections caused</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">교실 한 공간으로만 검증된 파이프라인이라, 성격이 다른 공간에도 통하는지 확인하려고 오피스로 한 번 더 돌렸습니다. CC-BY 공개 3D 모델(Sketchfab "Minimalistic Modern Office", dylanheyes)을 고도각 8~65°·방위각 360°로 200장 렌더해 학습했고, held-out 시점 PSNR 23.1dB(SSIM 0.918)가 나왔습니다.</span>
@@ -629,7 +675,10 @@
       <span class="en">On top of this space, eight building systems speaking different protocols (Modbus, BACnet, RTSP, MQTT, OCPP, dry contact) are normalized into one state model, and an alarm brings up its response procedure in the same panel — see <a href="https://leeyunhome.github.io/mxd-twin/" target="_blank" rel="noopener">mxd-twin</a>. This is a rendered public 3D model, not a real scan, and the sensor values are simulated.</span>
     </div>
 
-    <h3 class="reveal" style="margin-top:48px;"><span class="ko">3. 기계실 — 밀폐된 방을 안쪽에서 촬영하듯</span><span class="en">3. Plant room — shooting a sealed room from the inside</span></h3>
+    </div><!-- /case-panel office -->
+
+    <div class="case-panel" data-case="plantroom">
+    <h3 class="reveal" style="margin-top:0;"><span class="ko">3. 기계실 — 밀폐된 방을 안쪽에서 촬영하듯</span><span class="en">3. Plant room — shooting a sealed room from the inside</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">오피스 씬의 반사 문제와는 정반대 성격의 씬을 하나 더 시도했습니다. 배관·밸브가 늘어선 기계실(Sketchfab "Mechanical Systems Piping Room Sample", geppettomaster)인데, 재질이 전부 도장·금속 계열이라 유리 반사 위험이 거의 없습니다 — 대신 다른 문제가 있었습니다. 이 모델은 밀폐된 방 껍데기(벽·바닥·천장)이고 배관은 그 안쪽에 붙어 있어서, 지금까지 써온 "바깥에서 도는 궤도" 카메라로는 아예 안이 안 보였습니다.</span>
@@ -695,7 +744,10 @@
       </p>
     </div>
 
-    <h3 class="reveal" id="teeth" style="margin-top:56px;"><span class="ko">공간에서 오브젝트로: 치아 모델</span><span class="en">From spaces to an object: a dental model</span></h3>
+    </div><!-- /case-panel plantroom -->
+
+    <div class="case-panel" data-case="teeth">
+    <h3 class="reveal" id="teeth" style="margin-top:0;"><span class="ko">공간에서 오브젝트로: 치아 모델</span><span class="en">From spaces to an object: a dental model</span></h3>
     <div class="prose reveal">
       <p>
         <span class="ko">같은 파이프라인(카메라 포즈 설계 → pyrender 렌더 → 3DGS 학습, COLMAP 없음)을 이번엔 공간이 아니라 오브젝트 단독 촬영 시나리오에 적용했습니다. 공개 3D 치열 모델(Sketchfab "Permanent Dentition", DundeeDental — University of Dundee 치과대학이 CT 데이터로 제작, CC BY 4.0)을 전구면(고도각 -60~85°, 방위각 360°) 200장으로 렌더해 학습했습니다.</span>
@@ -741,6 +793,7 @@
       <span class="ko">이 씬은 <a href="viewer/?model=teeth">뷰어에서 바로 열어</a> 회전시켜볼 수 있습니다 — 실제 스캔이 아니라 대학 치과대학이 만든 공개 3D 모델을 렌더해 학습한 것입니다.</span>
       <span class="en"><a href="viewer/?model=teeth">Open this scene directly in the viewer</a> and rotate it yourself — this is a rendered public 3D model, not a real scan.</span>
     </div>
+    </div><!-- /case-panel teeth -->
   </div>
 </section>
 
@@ -877,6 +930,42 @@
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   }
+
+  /* ── Case tabs (act-3): show one case panel at a time; ?case=teeth 같은 쿼리로 딥링크 지원 */
+  (function () {
+    var tabs = document.querySelectorAll('.case-tab');
+    var panels = document.querySelectorAll('.case-panel');
+    if (!tabs.length || !panels.length) return;
+    var CASE_ALIASES = { dentition: 'teeth', plant_room: 'plantroom', 'plant-room': 'plantroom' };
+
+    function showCase(name) {
+      name = CASE_ALIASES[name] || name;
+      var matched = false;
+      panels.forEach(function (p) {
+        var on = p.dataset.case === name;
+        p.hidden = !on;
+        if (on) {
+          matched = true;
+          // 숨겨져 있던 패널은 IntersectionObserver가 못 봤을 수 있어 바로 보이게 강제한다.
+          p.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+        }
+      });
+      if (!matched) return showCase('mechander');
+      tabs.forEach(function (t) { t.classList.toggle('active', t.dataset.case === name); });
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        showCase(t.dataset.case);
+        var url = new URL(window.location.href);
+        url.searchParams.set('case', t.dataset.case);
+        history.replaceState(null, '', url);
+      });
+    });
+
+    var requested = new URLSearchParams(window.location.search).get('case');
+    showCase(requested || 'mechander');
+  })();
 
   /* ── Hero Gaussian-splat canvas (the one orchestrated moment) ── */
   var canvas = document.getElementById('splat-canvas');
